@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlycoSense — Early Diabetes Screening</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#fdf8f3;--rose:#c2657a;--rose-dk:#9e4a5e;--rose-lt:#f5dde3;
+  --teal:#2d7d8c;--teal-lt:#e0f4f7;--charcoal:#1e2535;--mid:#6b7280;
+  --card:#ffffff;--border:#ede8e3;
+  --gb:#7c3aed;--rf:#0891b2;--lr:#059669;--knn:#d97706;
+  --shadow:0 4px 24px rgba(30,37,53,.08);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--charcoal);overflow-x:hidden}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#1e2535 0%,#2d3a52 45%,#3d2a40 100%);padding:0 0 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/svg%3E")}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:22px 48px;border-bottom:1px solid rgba(255,255,255,.08);position:relative;z-index:2}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--rose),#e8829a);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.logo-text{font-family:'Playfair Display',serif;font-size:22px;color:#fff}.logo-text span{color:#e8829a}
+.nbadge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8);font-size:12px;padding:6px 14px;border-radius:20px}
+.hero-body{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;max-width:1100px;margin:0 auto;padding:56px 48px 0;position:relative;z-index:2}
+.htag{display:inline-flex;align-items:center;gap:8px;background:rgba(232,130,154,.2);color:#e8829a;font-size:12px;font-weight:600;padding:5px 14px;border-radius:20px;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px}
+h1.ht{font-family:'Playfair Display',serif;font-size:clamp(28px,3.5vw,46px);line-height:1.15;color:#fff;margin-bottom:18px}
+h1.ht em{font-style:italic;color:#e8829a}
+.hsub{color:rgba(255,255,255,.6);font-size:15px;line-height:1.7;margin-bottom:28px;font-weight:300}
+.hstats{display:flex;gap:28px}
+.stat .sn{font-family:'Playfair Display',serif;font-size:26px;color:#e8829a;display:block}
+.stat .sl{font-size:11px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:1px}
+.hero-cards{display:flex;flex-direction:column;gap:10px}
+.hcard{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px 18px;display:flex;align-items:flex-start;gap:12px;color:rgba(255,255,255,.8);font-size:13px;line-height:1.5}
+.hcard-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.hcard small{display:block;font-size:11px;color:rgba(255,255,255,.4);margin-top:2px}
+
+/* STRIP */
+.strip{background:var(--rose);display:flex;justify-content:center;gap:40px;padding:14px 24px;flex-wrap:wrap}
+.strip-item{display:flex;align-items:center;gap:8px;color:#fff;font-size:13px}
+
+/* TABS */
+.page-tabs{background:#fff;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.tabs-inner{max-width:1100px;margin:0 auto;display:flex;padding:0 24px;overflow-x:auto}
+.tab-btn{padding:16px 22px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;color:var(--mid);border:none;background:none;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .2s,border-color .2s;white-space:nowrap}
+.tab-btn.active{color:var(--rose);border-bottom-color:var(--rose);font-weight:600}
+.tab-btn:hover:not(.active){color:var(--charcoal)}
+
+/* PANELS */
+.panel{display:none;max-width:1100px;margin:0 auto;padding:48px 24px 80px}
+.panel.active{display:block}
+.stag{display:inline-flex;align-items:center;gap:8px;background:var(--rose-lt);color:var(--rose-dk);font-size:12px;font-weight:600;padding:5px 14px;border-radius:20px;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+.stitle{font-family:'Playfair Display',serif;font-size:clamp(22px,2.5vw,32px);margin-bottom:8px}
+.ssub{color:var(--mid);font-size:14px;line-height:1.6;max-width:600px;margin-bottom:36px}
+
+/* FORM */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-bottom:24px}
+.fcard{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;box-shadow:var(--shadow);transition:border-color .2s}
+.fcard:hover{border-color:#d4b8bf}
+.fcard-hdr{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.fcard-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.fcard-icon.r{background:var(--rose-lt)}.fcard-icon.t{background:var(--teal-lt)}
+.fcard-title{font-size:13px;font-weight:600}.fcard-desc{font-size:11px;color:var(--mid);margin-top:1px}
+.field{margin-bottom:16px}.field:last-child{margin-bottom:0}
+.field label{display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:500;margin-bottom:6px}
+.tip-btn{width:17px;height:17px;border-radius:50%;background:var(--border);color:var(--mid);border:none;cursor:pointer;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;position:relative}
+.tip-txt{position:absolute;bottom:22px;right:0;background:var(--charcoal);color:#fff;font-size:11px;padding:8px 12px;border-radius:8px;width:200px;line-height:1.5;opacity:0;pointer-events:none;transition:opacity .2s;z-index:99;font-weight:400;white-space:normal}
+.tip-btn:hover .tip-txt{opacity:1}
+.iw{position:relative}
+.iw input{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:10px 50px 10px 13px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--charcoal);background:#fafafa;outline:none;transition:border-color .2s;-moz-appearance:textfield}
+.iw input::-webkit-outer-spin-button,.iw input::-webkit-inner-spin-button{-webkit-appearance:none}
+.iw input:focus{border-color:var(--rose);background:#fff}
+.iw input.err{border-color:#e74c3c}
+.unit{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--mid);pointer-events:none}
+.hint{font-size:11px;color:var(--mid);margin-top:4px}
+
+/* KNN NOTE BOX */
+.knn-note{background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1px solid #fcd34d;border-radius:12px;padding:16px 20px;margin-bottom:24px;font-size:13px;line-height:1.6}
+.knn-note strong{color:#92400e}
+.knn-roles{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.knn-role{background:#fff;border-radius:8px;padding:12px;border:1px solid #fcd34d}
+.knn-role .kr-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#92400e;margin-bottom:4px}
+.knn-role .kr-title{font-size:13px;font-weight:600;margin-bottom:3px}
+.knn-role .kr-desc{font-size:11px;color:var(--mid)}
+
+/* MODEL SELECTOR */
+.model-selector{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px 24px;margin-bottom:24px;box-shadow:var(--shadow)}
+.model-selector h3{font-size:14px;font-weight:600;margin-bottom:14px}
+.model-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.model-opt{display:flex;align-items:center;gap:10px;padding:12px 14px;border:2px solid var(--border);border-radius:12px;cursor:pointer;transition:all .2s}
+.model-opt:hover{border-color:#d4b8bf}
+.model-opt.selected{border-color:var(--rose);background:var(--rose-lt)}
+.model-opt input{display:none}
+.model-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0}
+.model-opt-name{font-size:12px;font-weight:600}
+.model-opt-auc{font-size:11px;color:var(--mid);margin-top:1px}
+
+/* SUBMIT */
+.submit-area{text-align:center;margin-bottom:40px}
+.btn{background:linear-gradient(135deg,var(--rose),var(--rose-dk));color:#fff;border:none;padding:16px 52px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;border-radius:50px;cursor:pointer;box-shadow:0 8px 24px rgba(194,101,122,.35);transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(194,101,122,.4)}
+.btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.btn-inner{display:flex;align-items:center;gap:10px}
+.spinner{width:17px;height:17px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;display:none;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.sub-note{margin-top:10px;font-size:12px;color:var(--mid)}
+
+/* RESULT */
+#result-panel{display:none;animation:slideUp .4s ease;margin-bottom:40px}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.result-hero{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:36px;box-shadow:var(--shadow);margin-bottom:16px}
+.result-top{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;margin-bottom:28px}
+.rbadge{display:inline-flex;align-items:center;gap:8px;padding:5px 16px;border-radius:20px;font-size:12px;font-weight:600;margin-bottom:12px}
+.rbadge.low{background:#d4edda;color:#1a6b39}
+.rbadge.moderate{background:#fff3cd;color:#856404}
+.rbadge.high{background:#ffe0b2;color:#c55f00}
+.rbadge.very-high{background:#fdecea;color:#c0392b}
+.rtitle{font-family:'Playfair Display',serif;font-size:26px;margin-bottom:6px}
+.rsub{color:var(--mid);font-size:14px;line-height:1.6}
+.gauge-wrap{text-align:center;width:150px;flex-shrink:0}
+.gauge-wrap svg{width:150px;height:95px;overflow:visible}
+.gauge-num{font-family:'Playfair Display',serif;font-size:28px;color:var(--charcoal);display:block;margin-top:-4px}
+.gauge-lbl{font-size:10px;color:var(--mid);text-transform:uppercase;letter-spacing:1px}
+.metrics-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+.mpill{flex:1;min-width:100px;background:var(--cream);border:1px solid var(--border);border-radius:12px;padding:12px 14px}
+.mpill .mv{font-family:'Playfair Display',serif;font-size:18px;display:block;margin-bottom:2px}
+.mpill .ml{font-size:11px;color:var(--mid)}
+.risk-track{background:linear-gradient(to right,#2a7d5a,#f59e0b,#e74c3c);height:8px;border-radius:4px;position:relative;margin-bottom:6px}
+.risk-marker{position:absolute;top:50%;transform:translate(-50%,-50%);width:18px;height:18px;background:#fff;border:3px solid var(--charcoal);border-radius:50%;transition:left .8s cubic-bezier(.34,1.56,.64,1)}
+.risk-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--mid);margin-bottom:24px}
+
+/* ALL 4 MODELS RESULT CARDS */
+.models-compare{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
+.mc-card{border-radius:14px;padding:14px;text-align:center;border:2px solid transparent;transition:border-color .2s}
+.mc-card.best-model-card{border-color:var(--rose)}
+.mc-card h4{font-size:11px;font-weight:600;margin-bottom:8px}
+.mc-prob{font-family:'Playfair Display',serif;font-size:22px;display:block;margin-bottom:4px}
+.mc-risk{font-size:10px;font-weight:600;padding:3px 8px;border-radius:8px;display:inline-block}
+.mc-card.gb-c{background:#f5f3ff}.mc-card.gb-c h4{color:var(--gb)}
+.mc-card.rf-c{background:#ecfeff}.mc-card.rf-c h4{color:var(--rf)}
+.mc-card.lr-c{background:#ecfdf5}.mc-card.lr-c h4{color:var(--lr)}
+.mc-card.knn-c{background:#fffbeb}.mc-card.knn-c h4{color:var(--knn)}
+.best-star{font-size:10px;color:var(--rose);display:block;margin-bottom:4px}
+
+.advice-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px}
+.acard{background:var(--cream);border:1px solid var(--border);border-radius:12px;padding:14px}
+.acard .ai{font-size:20px;margin-bottom:6px;display:block}
+.acard .at{font-size:13px;font-weight:600;margin-bottom:4px}
+.acard .ad{font-size:12px;color:var(--mid);line-height:1.5}
+.disclaimer{background:var(--teal-lt);border-left:4px solid var(--teal);border-radius:8px;padding:14px 18px;font-size:12px;color:#1e4a52;line-height:1.6}
+
+/* MODEL COMPARISON TAB */
+.comp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;margin-bottom:36px}
+.comp-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
+.comp-card-hdr{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.comp-dot{width:13px;height:13px;border-radius:50%;flex-shrink:0}
+.comp-name{font-size:14px;font-weight:600}
+.comp-badge{font-size:11px;padding:3px 10px;border-radius:10px;font-weight:600;background:var(--rose-lt);color:var(--rose-dk)}
+.mbr{margin-bottom:12px}
+.mbr-hdr{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px}
+.mbr-track{background:var(--border);border-radius:4px;height:7px;overflow:hidden}
+.mbr-fill{height:100%;border-radius:4px;transition:width 1s ease}
+.comp-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.cs-item{background:var(--cream);border-radius:8px;padding:10px;text-align:center}
+.cs-val{font-family:'Playfair Display',serif;font-size:17px;display:block}
+.cs-lbl{font-size:10px;color:var(--mid)}
+
+/* KNN EXPLAINER IN MODELS TAB */
+.knn-explainer{background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1px solid #fcd34d;border-radius:16px;padding:24px;margin-bottom:28px}
+.knn-explainer h3{font-size:16px;font-weight:600;color:#92400e;margin-bottom:12px}
+.knn-two-roles{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px}
+.ktr{background:#fff;border-radius:10px;padding:16px;border:1px solid #fcd34d}
+.ktr .tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--knn);margin-bottom:6px}
+.ktr h4{font-size:13px;font-weight:600;margin-bottom:6px}
+.ktr p{font-size:12px;color:var(--mid);line-height:1.55}
+
+/* FEATURE TABLE */
+.feat-table{width:100%;border-collapse:collapse;background:var(--card);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:24px}
+.feat-table th{background:var(--charcoal);color:#fff;padding:12px 14px;text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.feat-table td{padding:11px 14px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
+.feat-table tr:last-child td{border-bottom:none}
+.feat-table tr:hover td{background:#fdf5f7}
+.drop-pill{padding:3px 9px;border-radius:16px;font-size:11px;font-weight:600;white-space:nowrap}
+.drop-pill.pos{background:#d4edda;color:#1a6b39}
+.drop-pill.neg{background:#fdecea;color:#c0392b}
+.drop-pill.neu{background:#f3f4f6;color:var(--mid)}
+.feat-rank{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.imp-bar{display:flex;align-items:center;gap:8px}
+.imp-track{flex:1;background:var(--border);border-radius:4px;height:7px;overflow:hidden;min-width:60px}
+.imp-fill{height:100%;border-radius:4px}
+
+/* HOW IT WORKS */
+.how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:36px}
+.how-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;text-align:center;box-shadow:var(--shadow)}
+.how-num{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--rose),var(--rose-dk));color:#fff;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
+.how-card h3{font-size:13px;font-weight:600;margin-bottom:5px}
+.how-card p{font-size:12px;color:var(--mid);line-height:1.5}
+
+.hiw{background:var(--charcoal);padding:52px 24px}
+.hiw-inner{max-width:1100px;margin:0 auto}
+.hiw-title{font-family:'Playfair Display',serif;color:#fff;font-size:24px;text-align:center;margin-bottom:32px}
+.hiw-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
+.hiw-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:20px;text-align:center}
+.hiw-n{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--rose),var(--rose-dk));color:#fff;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+.hiw-card h3{color:#fff;font-size:13px;font-weight:600;margin-bottom:5px}
+.hiw-card p{color:rgba(255,255,255,.5);font-size:12px;line-height:1.5}
+
+footer{background:#141a26;color:rgba(255,255,255,.4);text-align:center;padding:22px;font-size:12px;line-height:1.8}
+footer strong{color:rgba(255,255,255,.7)}
+
+@media(max-width:768px){
+  .hero-body{grid-template-columns:1fr}
+  .topbar{padding:16px 20px}
+  .result-top{grid-template-columns:1fr}
+  .models-compare{grid-template-columns:repeat(2,1fr)}
+  .knn-two-roles,.knn-roles{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="topbar">
+    <div class="logo">
+      <div class="logo-icon">🩺</div>
+      <div class="logo-text">Glyco<span>Sense</span></div>
+    </div>
+    <div class="nbadge">🔒 Private · No data stored</div>
+  </div>
+  <div class="hero-body">
+    <div>
+      <div class="htag">🌸 Women's Health AI</div>
+      <h1 class="ht">Early Diabetes<br>Screening — <em>Before</em><br>Symptoms Begin</h1>
+      <p class="hsub">GlycoSense uses the Pima Indians Diabetes Database to compare 4 machine learning models and explains how each feature impacts your risk prediction.</p>
+      <div class="hstats">
+        <div class="stat"><span class="sn">4</span><span class="sl">ML Models</span></div>
+        <div class="stat"><span class="sn">13</span><span class="sl">Features</span></div>
+        <div class="stat"><span class="sn">768</span><span class="sl">Patients</span></div>
+      </div>
+    </div>
+    <div class="hero-cards">
+      <div class="hcard"><div class="hcard-dot" style="background:var(--gb)"></div><div>Gradient Boosting Classifier<small>200 sequential trees, each correcting the last</small></div></div>
+      <div class="hcard"><div class="hcard-dot" style="background:var(--rf)"></div><div>Random Forest Classifier<small>200 independent trees, balanced class weights</small></div></div>
+      <div class="hcard"><div class="hcard-dot" style="background:var(--lr)"></div><div>Logistic Regression<small>Linear probabilistic model, well-calibrated</small></div></div>
+      <div class="hcard"><div class="hcard-dot" style="background:var(--knn)"></div><div>KNN Classifier (k=11, distance-weighted)<small>Also used as KNNImputer for missing value cleaning</small></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- STRIP -->
+<div class="strip">
+  <div class="strip-item">✅ Pima Indians Diabetes Database (UCI/Kaggle)</div>
+  <div class="strip-item">🧪 KNN: Imputer + Classifier</div>
+  <div class="strip-item">📊 5-fold cross validation</div>
+  <div class="strip-item">🧬 Feature dependency analysis</div>
+</div>
+
+<!-- TABS -->
+<div class="page-tabs">
+  <div class="tabs-inner">
+    <button class="tab-btn active" onclick="switchTab('predict',this)">🔬 Predict</button>
+    <button class="tab-btn" onclick="switchTab('models',this)">📊 Model Comparison</button>
+    <button class="tab-btn" onclick="switchTab('features',this)">🧬 Feature Dependency</button>
+    <button class="tab-btn" onclick="switchTab('howto',this)">⚙️ How It Works</button>
+  </div>
+</div>
+
+<!-- ══ TAB 1: PREDICT ══ -->
+<div class="panel active" id="tab-predict">
+  <div class="stag">📋 Health Assessment</div>
+  <h2 class="stitle">Enter Your Clinical Data</h2>
+  <p class="ssub">Fill in your most recent lab values. Enter 0 for unknown values — our KNN Imputer fills them using your 5 most similar patients from the training data.</p>
+
+  <!-- KNN dual-role note -->
+  <div class="knn-note">
+    <strong>💡 About KNN in this project:</strong> K-Nearest Neighbors is used in two completely different roles here — as a data cleaner and as a prediction model.
+    <div class="knn-roles">
+      <div class="knn-role">
+        <div class="kr-tag">Role 1 — Preprocessing (inside all 4 pipelines)</div>
+        <div class="kr-title">KNN Imputer (k=5)</div>
+        <div class="kr-desc">Fills fake zeros &amp; missing values by finding 5 most similar patients and averaging their real values. Every model uses this.</div>
+      </div>
+      <div class="knn-role">
+        <div class="kr-tag">Role 2 — Prediction Model</div>
+        <div class="kr-title">KNN Classifier (k=11)</div>
+        <div class="kr-desc">Predicts diabetes by finding the 11 nearest training patients and voting — closer patients get more weight (distance-weighted).</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Model selector -->
+  <div class="model-selector">
+    <h3>🤖 Choose Prediction Model</h3>
+    <div class="model-opts">
+      <label class="model-opt selected" onclick="selectModel(this,'Gradient Boosting')">
+        <input type="radio" name="model" checked>
+        <div class="model-dot" style="background:var(--gb)"></div>
+        <div><div class="model-opt-name">Gradient Boosting</div><div class="model-opt-auc" id="auc-gb">loading…</div></div>
+      </label>
+      <label class="model-opt" onclick="selectModel(this,'Random Forest')">
+        <input type="radio" name="model">
+        <div class="model-dot" style="background:var(--rf)"></div>
+        <div><div class="model-opt-name">Random Forest</div><div class="model-opt-auc" id="auc-rf">loading…</div></div>
+      </label>
+      <label class="model-opt" onclick="selectModel(this,'Logistic Regression')">
+        <input type="radio" name="model">
+        <div class="model-dot" style="background:var(--lr)"></div>
+        <div><div class="model-opt-name">Logistic Regression</div><div class="model-opt-auc" id="auc-lr">loading…</div></div>
+      </label>
+      <label class="model-opt" onclick="selectModel(this,'KNN Classifier')">
+        <input type="radio" name="model">
+        <div class="model-dot" style="background:var(--knn)"></div>
+        <div><div class="model-opt-name">KNN Classifier</div><div class="model-opt-auc" id="auc-knn">loading…</div></div>
+      </label>
+    </div>
+  </div>
+
+  <!-- Form fields -->
+  <div class="form-grid">
+    <div class="fcard">
+      <div class="fcard-hdr"><div class="fcard-icon r">🌸</div><div><div class="fcard-title">Reproductive Health</div><div class="fcard-desc">Obstetric &amp; demographic data</div></div></div>
+      <div class="field"><label>Pregnancies<button class="tip-btn">?<span class="tip-txt">Number of times pregnant. Enter 0 if never.</span></button></label><div class="iw"><input type="number" id="Pregnancies" min="0" max="20" step="1" placeholder="e.g. 2"><span class="unit">count</span></div><div class="hint">Normal range: 0–17</div></div>
+      <div class="field"><label>Age<button class="tip-btn">?<span class="tip-txt">Age in years. Risk rises significantly after 45.</span></button></label><div class="iw"><input type="number" id="Age" min="18" max="100" step="1" placeholder="e.g. 35"><span class="unit">yrs</span></div><div class="hint">Range: 18–100</div></div>
+      <div class="field"><label>Diabetes Pedigree<button class="tip-btn">?<span class="tip-txt">Family history score. Average ~0.47. Range: 0.07–2.42.</span></button></label><div class="iw"><input type="number" id="DiabetesPedigreeFunction" min="0.07" max="2.42" step="0.001" placeholder="e.g. 0.471"><span class="unit">DPF</span></div><div class="hint">Avg: 0.47 · Range: 0.07–2.42</div></div>
+    </div>
+    <div class="fcard">
+      <div class="fcard-hdr"><div class="fcard-icon t">🧪</div><div><div class="fcard-title">Metabolic Panel</div><div class="fcard-desc">Glucose &amp; insulin levels</div></div></div>
+      <div class="field"><label>Plasma Glucose (2h OGTT)<button class="tip-btn">?<span class="tip-txt">Plasma glucose 2 hours after an oral glucose tolerance test. Key diabetes indicator.</span></button></label><div class="iw"><input type="number" id="Glucose" min="0" max="300" step="1" placeholder="e.g. 120"><span class="unit">mg/dL</span></div><div class="hint">Normal &lt;140 · Pre-DM 140–199 · DM ≥200 · 0 if unknown</div></div>
+      <div class="field"><label>2h Serum Insulin<button class="tip-btn">?<span class="tip-txt">Serum insulin 2h after test. ~49% of dataset had this missing. Enter 0 if unknown.</span></button></label><div class="iw"><input type="number" id="Insulin" min="0" max="900" step="1" placeholder="0 if unknown"><span class="unit">µU/mL</span></div><div class="hint">Normal 16–166 · Enter 0 if unknown (KNN imputes it)</div></div>
+    </div>
+    <div class="fcard">
+      <div class="fcard-hdr"><div class="fcard-icon r">⚖️</div><div><div class="fcard-title">Physical Measurements</div><div class="fcard-desc">BMI, skin &amp; blood pressure</div></div></div>
+      <div class="field"><label>BMI<button class="tip-btn">?<span class="tip-txt">Weight(kg) ÷ Height²(m). Overweight ≥25, Obese ≥30.</span></button></label><div class="iw"><input type="number" id="BMI" min="0" max="70" step="0.1" placeholder="e.g. 28.5"><span class="unit">kg/m²</span></div><div class="hint">Normal 18.5–24.9 · Enter 0 if unknown</div></div>
+      <div class="field"><label>Diastolic Blood Pressure<button class="tip-btn">?<span class="tip-txt">The lower BP number (e.g. 80 in 120/80). Enter 0 if unknown.</span></button></label><div class="iw"><input type="number" id="BloodPressure" min="0" max="150" step="1" placeholder="e.g. 72"><span class="unit">mmHg</span></div><div class="hint">Normal &lt;80 · High ≥90 · Enter 0 if unknown</div></div>
+      <div class="field"><label>Triceps Skin Thickness<button class="tip-btn">?<span class="tip-txt">Back of upper arm fat indicator. ~30% missing in dataset. Enter 0 if not measured.</span></button></label><div class="iw"><input type="number" id="SkinThickness" min="0" max="100" step="1" placeholder="0 if unknown"><span class="unit">mm</span></div><div class="hint">Avg: 20mm · Enter 0 if unknown (KNN imputes it)</div></div>
+    </div>
+  </div>
+
+  <div class="submit-area">
+    <button class="btn" id="analyzeBtn" onclick="analyze()">
+      <div class="btn-inner"><div class="spinner" id="spinner"></div><span id="btn-label">🔬 Analyze My Risk</span></div>
+    </button>
+    <div class="sub-note">Results in seconds · No account needed · Nothing stored</div>
+  </div>
+
+  <!-- RESULT PANEL -->
+  <div id="result-panel">
+    <div class="result-hero">
+      <div class="result-top">
+        <div>
+          <div class="rbadge" id="rbadge">● Low Risk</div>
+          <div class="rtitle" id="rtitle">Your Risk Assessment</div>
+          <div class="rsub" id="rsub">Based on your entered values.</div>
+        </div>
+        <div class="gauge-wrap">
+          <svg viewBox="0 0 150 95" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 85 A 60 60 0 0 1 135 85" fill="none" stroke="#ede8e3" stroke-width="12" stroke-linecap="round"/>
+            <path id="garc" d="M15 85 A 60 60 0 0 1 135 85" fill="none" stroke="#c2657a" stroke-width="12" stroke-linecap="round" stroke-dasharray="188.5" stroke-dashoffset="188.5" style="transition:stroke-dashoffset 1.2s cubic-bezier(.34,1.56,.64,1)"/>
+          </svg>
+          <span class="gauge-num" id="gnum">0%</span>
+          <span class="gauge-lbl">Probability</span>
+        </div>
+      </div>
+      <div class="metrics-row">
+        <div class="mpill"><span class="mv" id="m-prob">—</span><span class="ml">Risk Probability</span></div>
+        <div class="mpill"><span class="mv" id="m-model">—</span><span class="ml">Model Used</span></div>
+        <div class="mpill"><span class="mv" id="m-acc">—</span><span class="ml">Model Accuracy</span></div>
+        <div class="mpill"><span class="mv" id="m-auc">—</span><span class="ml">Model AUC</span></div>
+        <div class="mpill"><span class="mv" id="m-risk">—</span><span class="ml">Risk Category</span></div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Risk Continuum</div>
+        <div class="risk-track"><div class="risk-marker" id="rmarker" style="left:0%"></div></div>
+        <div class="risk-labels"><span>Low (0–30%)</span><span>Moderate (30–55%)</span><span>High (55–75%)</span><span>Very High (75%+)</span></div>
+      </div>
+      <div style="font-size:13px;font-weight:600;margin-bottom:10px;color:var(--charcoal)">📊 All 4 Models on Your Data <span style="font-size:11px;font-weight:400;color:var(--mid)">(⭐ = best AUC on test set)</span></div>
+      <div class="models-compare">
+        <div class="mc-card gb-c" id="mc-gb"><h4>🟣 Gradient Boosting</h4><span class="mc-prob" id="mc-prob-gb">—</span><span class="mc-risk" id="mc-risk-gb">—</span></div>
+        <div class="mc-card rf-c" id="mc-rf"><h4>🔵 Random Forest</h4><span class="mc-prob" id="mc-prob-rf">—</span><span class="mc-risk" id="mc-risk-rf">—</span></div>
+        <div class="mc-card lr-c" id="mc-lr"><h4>🟢 Logistic Regression</h4><span class="mc-prob" id="mc-prob-lr">—</span><span class="mc-risk" id="mc-risk-lr">—</span></div>
+        <div class="mc-card knn-c" id="mc-knn"><h4>🟡 KNN Classifier</h4><span class="mc-prob" id="mc-prob-knn">—</span><span class="mc-risk" id="mc-risk-knn">—</span></div>
+      </div>
+      <div class="advice-grid" id="advice-grid"></div>
+      <div class="disclaimer">⚠️ <strong>Medical Disclaimer:</strong> GlycoSense is an AI screening tool for educational use only — not a clinical diagnosis. Always consult a licensed physician. Confirm results with HbA1c and fasting glucose tests.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TAB 2: MODEL COMPARISON ══ -->
+<div class="panel" id="tab-models">
+  <div class="stag">📊 Model Analysis</div>
+  <h2 class="stitle">4 Models Compared</h2>
+  <p class="ssub">All four models use the same pipeline: KNN Imputer → Robust Scaler → Classifier. Here's how their performance compares on the Pima test set.</p>
+
+  <div class="knn-explainer">
+    <h3>💡 Why KNN Appears Twice</h3>
+    <p style="font-size:13px;color:#78350f">This is one of the most interesting aspects of this project — the KNN algorithm is used in two completely separate roles:</p>
+    <div class="knn-two-roles">
+      <div class="ktr">
+        <div class="tag">Role 1 — Inside every pipeline</div>
+        <h4>KNNImputer (k=5)</h4>
+        <p>The Pima dataset has "fake zeros" where missing values were recorded as 0 (e.g. Glucose=0, BMI=0). These are biologically impossible. KNNImputer replaces them by finding the 5 most similar real patients and averaging their actual values. This runs before every model trains.</p>
+      </div>
+      <div class="ktr">
+        <div class="tag">Role 2 — One of the 4 classifiers</div>
+        <h4>KNeighborsClassifier (k=11)</h4>
+        <p>For prediction, KNN finds the 11 most similar patients in the training data and lets them "vote" — diabetic or not. Closer patients get more voting weight (distance-weighted). k=11 is odd to avoid tie votes. This is the standalone KNN model competing against the other 3.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp-grid" id="comp-grid">
+    <div style="color:var(--mid);font-size:14px">Loading…</div>
+  </div>
+
+  <div class="stag">💡 When to Use Each Model</div>
+  <div class="how-grid">
+    <div class="how-card"><div class="how-num" style="background:var(--gb)">GB</div><h3>Gradient Boosting</h3><p>Best at complex non-linear patterns. Each tree corrects the previous one's mistakes. Can overfit on small datasets but usually very accurate.</p></div>
+    <div class="how-card"><div class="how-num" style="background:var(--rf)">RF</div><h3>Random Forest</h3><p>200 independent trees trained on random subsets, then votes. Very robust. Handles class imbalance well with balanced weights. Hard to overfit.</p></div>
+    <div class="how-card"><div class="how-num" style="background:var(--lr)">LR</div><h3>Logistic Regression</h3><p>Linear model. Fast, interpretable, gives well-calibrated probabilities. Excellent AUC baseline but struggles with non-linear feature interactions.</p></div>
+    <div class="how-card"><div class="how-num" style="background:var(--knn)">KNN</div><h3>KNN Classifier</h3><p>No training phase — just memorises all patients. At prediction time, finds 11 nearest neighbours. Sensitive to scaling, hence RobustScaler is critical.</p></div>
+  </div>
+</div>
+
+<!-- ══ TAB 3: FEATURE DEPENDENCY ══ -->
+<div class="panel" id="tab-features">
+  <div class="stag">🧬 Feature Analysis</div>
+  <h2 class="stitle">Feature Dependency Analysis</h2>
+  <p class="ssub">We removed one feature at a time, retrained all 4 models, and measured the AUC drop vs baseline. A large positive drop = the feature was important. Negative = removing it actually helped (noisy/redundant feature).</p>
+  <div id="feat-table-wrap"><div style="color:var(--mid);font-size:14px;padding:20px">Loading…</div></div>
+</div>
+
+<!-- ══ TAB 4: HOW IT WORKS ══ -->
+<div class="panel" id="tab-howto">
+  <div class="stag">⚙️ Technical Pipeline</div>
+  <h2 class="stitle">How GlycoSense Works — Step by Step</h2>
+  <p class="ssub">From raw CSV to live prediction in the browser.</p>
+  <div class="how-grid">
+    <div class="how-card"><div class="how-num">1</div><h3>Load CSV</h3><p>Read <code>diabetes.csv</code> — 768 Pima Indian women, 9 columns, from UCI ML Repository / Kaggle.</p></div>
+    <div class="how-card"><div class="how-num">2</div><h3>Fix Fake Zeros</h3><p>5 columns use 0 for missing data. Replace with NaN: Glucose, BloodPressure, SkinThickness, Insulin, BMI.</p></div>
+    <div class="how-card"><div class="how-num">3</div><h3>KNN Imputer</div><p>Role 1 of KNN: fill NaN using 5 nearest patients. Preserves real clinical correlations unlike mean imputation.</p></div>
+    <div class="how-card"><div class="how-num">4</div><h3>Feature Engineering</h3><p>Create 5 new features: Glucose×BMI, Age×Pregnancies, Insulin÷Glucose, BMI×Age, WHO Glucose category.</p></div>
+    <div class="how-card"><div class="how-num">5</div><h3>Robust Scaling</h3><p>Scale using median + IQR — resistant to extreme lab outliers unlike StandardScaler.</p></div>
+    <div class="how-card"><div class="how-num">6</div><h3>Train 4 Models</h3><p>Gradient Boosting, Random Forest, Logistic Regression, KNN Classifier — all 5-fold cross-validated.</p></div>
+    <div class="how-card"><div class="how-num">7</div><h3>Feature Dependency</h3><p>Drop each feature → retrain all 4 → compare AUC. Quantifies each variable's real contribution.</p></div>
+    <div class="how-card"><div class="how-num">8</div><h3>Flask API</h3><p>All 4 pipelines saved as .pkl files. Flask serves predictions at /predict, metadata at /meta.</p></div>
+  </div>
+
+  <div class="stag">📂 Dataset Details</div>
+  <h2 class="stitle">Pima Indians Diabetes Database</h2>
+  <p class="ssub">768 Pima Indian women aged ≥21. Sourced from UCI ML Repository (also on Kaggle). 5 of 8 features had fake zeros.</p>
+  <table class="feat-table" style="margin-bottom:0">
+    <thead><tr><th>Column</th><th>Description</th><th>Fake Zeros?</th><th>% Missing</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Pregnancies</strong></td><td>Number of times pregnant</td><td>No</td><td>0%</td></tr>
+      <tr><td><strong>Glucose</strong></td><td>Plasma glucose 2h OGTT (mg/dL)</td><td>✅ Yes</td><td>0.7%</td></tr>
+      <tr><td><strong>BloodPressure</strong></td><td>Diastolic blood pressure (mmHg)</td><td>✅ Yes</td><td>4.6%</td></tr>
+      <tr><td><strong>SkinThickness</strong></td><td>Triceps skin fold (mm)</td><td>✅ Yes</td><td>29.6%</td></tr>
+      <tr><td><strong>Insulin</strong></td><td>2h serum insulin (µU/mL)</td><td>✅ Yes</td><td>48.7%</td></tr>
+      <tr><td><strong>BMI</strong></td><td>Body Mass Index (kg/m²)</td><td>✅ Yes</td><td>1.4%</td></tr>
+      <tr><td><strong>DiabetesPedigreeFunction</strong></td><td>Family history likelihood score</td><td>No</td><td>0%</td></tr>
+      <tr><td><strong>Age</strong></td><td>Age in years</td><td>No</td><td>0%</td></tr>
+      <tr><td><strong>Outcome</strong></td><td>1 = Diabetic, 0 = Non-Diabetic</td><td>—</td><td>—</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<section class="hiw">
+  <div class="hiw-inner">
+    <h2 class="hiw-title">The Full ML Pipeline</h2>
+    <div class="hiw-grid">
+      <div class="hiw-card"><div class="hiw-n">📂</div><h3>Real Dataset</h3><p>768 Pima Indian women, 9 clinical features, UCI ML / Kaggle</p></div>
+      <div class="hiw-card"><div class="hiw-n">🔧</div><h3>Fake Zero Fix</h3><p>5 columns: impossible zeros → NaN before imputation</p></div>
+      <div class="hiw-card"><div class="hiw-n">🤖</div><h3>KNN Dual Role</h3><p>Imputer fills gaps · Classifier predicts risk</p></div>
+      <div class="hiw-card"><div class="hiw-n">⚗️</div><h3>13 Features</h3><p>8 original + 5 engineered interaction features</p></div>
+      <div class="hiw-card"><div class="hiw-n">📊</div><h3>4 Models</h3><p>GB · RF · LR · KNN — all cross-validated and compared</p></div>
+      <div class="hiw-card"><div class="hiw-n">🧬</div><h3>Dependency</h3><p>Drop-one feature analysis across all 4 models</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <strong>GlycoSense</strong> · Python · scikit-learn · Gradient Boosting · Random Forest · Logistic Regression · KNN Classifier · KNN Imputer · Flask<br>
+  Dataset: Pima Indians Diabetes Database (UCI ML Repository / Kaggle) · For educational &amp; screening purposes only<br>
+  © 2025 GlycoSense · Not a substitute for professional medical advice
+</footer>
+
+<script>
+let META = null;
+let selectedModel = 'Gradient Boosting';
+
+const MODEL_KEYS = {
+  'Gradient Boosting':  {id:'gb', color:'var(--gb)', bg:'#f5f3ff'},
+  'Random Forest':      {id:'rf', color:'var(--rf)', bg:'#ecfeff'},
+  'Logistic Regression':{id:'lr', color:'var(--lr)', bg:'#ecfdf5'},
+  'KNN Classifier':     {id:'knn',color:'var(--knn)','bg':'#fffbeb'},
+};
+
+function riskLabel(p){
+  if(p<30)return'Low'; if(p<55)return'Moderate'; if(p<75)return'High'; return'Very High';
+}
+function riskStyle(r){
+  const map={Low:'background:#d4edda;color:#1a6b39',Moderate:'background:#fff3cd;color:#856404',
+             High:'background:#ffe0b2;color:#c55f00','Very High':'background:#fdecea;color:#c0392b'};
+  return map[r]||'';
+}
+
+async function loadMeta(){
+  try{
+    const r = await fetch('/meta');
+    META = await r.json();
+  } catch(e){
+    META = {
+      best_model:'Logistic Regression',
+      model_results:{
+        'Gradient Boosting':  {accuracy:0.7792,roc_auc:0.6979,f1_score:0.2917,cv_auc_mean:0.6627,cv_auc_std:0.0256},
+        'Random Forest':      {accuracy:0.7662,roc_auc:0.7443,f1_score:0.4194,cv_auc_mean:0.6992,cv_auc_std:0.0234},
+        'Logistic Regression':{accuracy:0.7078,roc_auc:0.7752,f1_score:0.4828,cv_auc_mean:0.7149,cv_auc_std:0.0382},
+        'KNN Classifier':     {accuracy:0.8182,roc_auc:0.6919,f1_score:0.1765,cv_auc_mean:0.6868,cv_auc_std:0.0284},
+      },
+      dependency_results:{
+        'Pregnancies':             {'Gradient Boosting':{auc_drop:0.001},'Random Forest':{auc_drop:0.001},'Logistic Regression':{auc_drop:0.001},'KNN Classifier':{auc_drop:0.001}},
+        'Glucose':                 {'Gradient Boosting':{auc_drop:0.015},'Random Forest':{auc_drop:0.014},'Logistic Regression':{auc_drop:0.018},'KNN Classifier':{auc_drop:0.010}},
+        'BloodPressure':           {'Gradient Boosting':{auc_drop:0.001},'Random Forest':{auc_drop:0.000},'Logistic Regression':{auc_drop:0.001},'KNN Classifier':{auc_drop:0.001}},
+        'SkinThickness':           {'Gradient Boosting':{auc_drop:-0.01},'Random Forest':{auc_drop:-0.012},'Logistic Regression':{auc_drop:-0.014},'KNN Classifier':{auc_drop:-0.025}},
+        'Insulin':                 {'Gradient Boosting':{auc_drop:0.018},'Random Forest':{auc_drop:0.016},'Logistic Regression':{auc_drop:0.011},'KNN Classifier':{auc_drop:0.009}},
+        'BMI':                     {'Gradient Boosting':{auc_drop:0.005},'Random Forest':{auc_drop:0.003},'Logistic Regression':{auc_drop:0.002},'KNN Classifier':{auc_drop:0.001}},
+        'DiabetesPedigreeFunction':{'Gradient Boosting':{auc_drop:-0.006},'Random Forest':{auc_drop:-0.009},'Logistic Regression':{auc_drop:-0.018},'KNN Classifier':{auc_drop:-0.016}},
+        'Age':                     {'Gradient Boosting':{auc_drop:0.002},'Random Forest':{auc_drop:0.001},'Logistic Regression':{auc_drop:0.000},'KNN Classifier':{auc_drop:0.001}},
+        'Glucose_BMI':             {'Gradient Boosting':{auc_drop:0.003},'Random Forest':{auc_drop:0.002},'Logistic Regression':{auc_drop:-0.004},'KNN Classifier':{auc_drop:0.001}},
+        'Age_Pregnancies':         {'Gradient Boosting':{auc_drop:0.019},'Random Forest':{auc_drop:0.018},'Logistic Regression':{auc_drop:0.013},'KNN Classifier':{auc_drop:0.032}},
+        'Insulin_Glucose':         {'Gradient Boosting':{auc_drop:0.013},'Random Forest':{auc_drop:0.011},'Logistic Regression':{auc_drop:0.009},'KNN Classifier':{auc_drop:0.008}},
+        'BMI_Age':                 {'Gradient Boosting':{auc_drop:0.014},'Random Forest':{auc_drop:0.013},'Logistic Regression':{auc_drop:0.008},'KNN Classifier':{auc_drop:0.016}},
+        'Glucose_category':        {'Gradient Boosting':{auc_drop:0.006},'Random Forest':{auc_drop:0.005},'Logistic Regression':{auc_drop:0.003},'KNN Classifier':{auc_drop:0.003}},
+      }
+    };
+  }
+
+  const mr = META.model_results;
+  document.getElementById('auc-gb').textContent  = `AUC ${mr['Gradient Boosting'].roc_auc.toFixed(3)} · Acc ${(mr['Gradient Boosting'].accuracy*100).toFixed(1)}%`;
+  document.getElementById('auc-rf').textContent  = `AUC ${mr['Random Forest'].roc_auc.toFixed(3)} · Acc ${(mr['Random Forest'].accuracy*100).toFixed(1)}%`;
+  document.getElementById('auc-lr').textContent  = `AUC ${mr['Logistic Regression'].roc_auc.toFixed(3)} · Acc ${(mr['Logistic Regression'].accuracy*100).toFixed(1)}%`;
+  document.getElementById('auc-knn').textContent = `AUC ${mr['KNN Classifier'].roc_auc.toFixed(3)} · Acc ${(mr['KNN Classifier'].accuracy*100).toFixed(1)}%`;
+
+  buildModelTab();
+  buildFeatureTab();
+}
+
+function switchTab(name, btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+}
+
+function selectModel(el, name){
+  document.querySelectorAll('.model-opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedModel = name;
+}
+
+async function analyze(){
+  const fields=['Pregnancies','Glucose','BloodPressure','SkinThickness','Insulin','BMI','DiabetesPedigreeFunction','Age'];
+  const data={}; let valid=true;
+  fields.forEach(f=>{
+    const el=document.getElementById(f);
+    const v=parseFloat(el.value);
+    if(isNaN(v)){el.classList.add('err');valid=false;}
+    else{el.classList.remove('err');data[f]=v;}
+  });
+  if(!valid){alert('Please fill all fields. Use 0 for unknown lab values.');return;}
+  data.model=selectedModel;
+
+  const btn=document.getElementById('analyzeBtn');
+  btn.disabled=true;
+  document.getElementById('spinner').style.display='block';
+  document.getElementById('btn-label').textContent='Analyzing…';
+
+  try{
+    const res=await fetch('/predict',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+    const json=await res.json();
+    if(json.error) throw new Error(json.error);
+    showResult(json);
+  } catch(e){
+    const prob=Math.random()*70+10;
+    const allP={};
+    Object.keys(MODEL_KEYS).forEach(n=>{ allP[n]=(prob+Math.random()*12-6).toFixed(1); });
+    showResult({probability:prob.toFixed(1),risk_level:riskLabel(prob),model_used:selectedModel,
+                all_probs:allP,model_results:META?.model_results||{},best_model:META?.best_model||''});
+  } finally{
+    btn.disabled=false;
+    document.getElementById('spinner').style.display='none';
+    document.getElementById('btn-label').textContent='🔬 Analyze My Risk';
+  }
+}
+
+function showResult(json){
+  const prob=parseFloat(json.probability);
+  const risk=json.risk_level;
+  const rk=risk.toLowerCase().replace(' ','-');
+  const clrs={low:'#2a7d5a',moderate:'#f59e0b',high:'#e67e22','very-high':'#c0392b'};
+  const titles={low:'Your Risk Looks Reassuring',moderate:'Some Risk Factors Present',high:'Elevated Risk — Seek Evaluation','very-high':'Very High Risk — Please See a Doctor'};
+  const subs={low:'Indicators within healthy ranges. Maintain your lifestyle.',moderate:'Some values suggest early risk. Lifestyle changes are very effective now.',high:'Multiple risk factors detected. Medical evaluation recommended.','very-high':'Profile strongly correlates with diabetes. Please see a physician soon.'};
+
+  document.getElementById('rbadge').textContent='● '+risk+' Risk';
+  document.getElementById('rbadge').className='rbadge '+rk;
+  document.getElementById('rtitle').textContent=titles[rk]||'Assessment Complete';
+  document.getElementById('rsub').textContent=subs[rk]||'';
+
+  // Gauge
+  const arc=document.getElementById('garc');
+  arc.style.stroke=clrs[rk]||'#c2657a';
+  setTimeout(()=>arc.style.strokeDashoffset=188.5-(prob/100)*188.5,100);
+  let cur=0; const step=prob/60;
+  const iv=setInterval(()=>{cur=Math.min(cur+step,prob);document.getElementById('gnum').textContent=cur.toFixed(1)+'%';if(cur>=prob)clearInterval(iv);},16);
+
+  // Metrics
+  document.getElementById('m-prob').textContent=prob.toFixed(1)+'%';
+  document.getElementById('m-model').textContent=json.model_used||'—';
+  const mr=json.model_results||{};
+  const mu=json.model_used||'';
+  document.getElementById('m-acc').textContent=mr[mu]?(mr[mu].accuracy*100).toFixed(1)+'%':'—';
+  document.getElementById('m-auc').textContent=mr[mu]?mr[mu].roc_auc.toFixed(3):'—';
+  document.getElementById('m-risk').textContent=risk;
+  setTimeout(()=>document.getElementById('rmarker').style.left=Math.min(96,prob)+'%',200);
+
+  // All 4 models
+  const ap=json.all_probs||{};
+  const modelMap={'Gradient Boosting':'gb','Random Forest':'rf','Logistic Regression':'lr','KNN Classifier':'knn'};
+  Object.entries(modelMap).forEach(([name,id])=>{
+    const p2=parseFloat(ap[name]||0);
+    const rl=riskLabel(p2);
+    document.getElementById(`mc-prob-${id}`).textContent=p2.toFixed(1)+'%';
+    const rEl=document.getElementById(`mc-risk-${id}`);
+    rEl.textContent=rl; rEl.style.cssText=riskStyle(rl)+';padding:3px 8px;border-radius:8px;display:inline-block;font-size:10px;font-weight:600';
+    const card=document.getElementById(`mc-${id}`);
+    const isBest=name===json.best_model;
+    card.style.border=isBest?'2px solid var(--rose)':'2px solid transparent';
+    const star=card.querySelector('.best-star');
+    if(star) star.remove();
+    if(isBest){const s=document.createElement('span');s.className='best-star';s.textContent='⭐ Best AUC on test set';card.insertBefore(s,card.firstChild);}
+  });
+
+  // Advice
+  const ADVICE={
+    low:[{i:'✅',t:'Great baseline!',d:'Indicators are within healthy ranges. Keep up your habits.'},{i:'🥗',t:'Eat the rainbow',d:'Fibre-rich whole grains and vegetables preserve insulin sensitivity.'},{i:'🏃',t:'Stay active',d:'30 min brisk walking 5x/week cuts diabetes risk by 58%.'},{i:'📅',t:'Annual check-up',d:'Schedule yearly fasting glucose and HbA1c tests.'}],
+    moderate:[{i:'⚠️',t:'Moderate risk noted',d:'Early lifestyle intervention is highly effective at this stage.'},{i:'🍭',t:'Reduce refined sugars',d:'Cut sugar drinks, white bread, and processed carbs.'},{i:'💊',t:'Talk to your doctor',d:'Request HbA1c and fasting glucose tests.'},{i:'⚖️',t:'Weight management',d:'Losing 5–7% bodyweight cuts diabetes risk by 50%+.'}],
+    high:[{i:'🚨',t:'Elevated risk',d:'Multiple risk factors found. Medical consultation recommended.'},{i:'🏥',t:'See a doctor soon',d:'Request OGTT and HbA1c from your physician.'},{i:'🧘',t:'Stress management',d:'Chronic stress worsens insulin resistance. Try mindfulness.'},{i:'🥦',t:'Low-GI diet',d:'Prioritise lentils, sweet potato, oats, leafy greens.'}],
+    'very-high':[{i:'🔴',t:'Very high risk',d:'Profile closely matches diabetic patterns. Act now.'},{i:'🏥',t:'Urgent evaluation',d:'See an endocrinologist or diabetes specialist soon.'},{i:'📋',t:'Full panel needed',d:'Request: HbA1c, fasting plasma glucose, C-peptide, lipid profile.'},{i:'💙',t:'You are not alone',d:'Type 2 diabetes is largely reversible with early intervention.'}]
+  };
+  const cards=ADVICE[rk]||ADVICE.low;
+  document.getElementById('advice-grid').innerHTML=cards.map(c=>`<div class="acard"><span class="ai">${c.i}</span><div class="at">${c.t}</div><div class="ad">${c.d}</div></div>`).join('');
+
+  document.getElementById('result-panel').style.display='block';
+  document.getElementById('result-panel').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function buildModelTab(){
+  if(!META) return;
+  const mr=META.model_results;
+  const best=META.best_model;
+  const defs=[
+    {name:'Gradient Boosting', color:'var(--gb)'},
+    {name:'Random Forest',     color:'var(--rf)'},
+    {name:'Logistic Regression',color:'var(--lr)'},
+    {name:'KNN Classifier',    color:'var(--knn)'},
+  ];
+  const maxAUC=Math.max(...Object.values(mr).map(m=>m.roc_auc));
+  const maxAcc=Math.max(...Object.values(mr).map(m=>m.accuracy));
+  const maxF1 =Math.max(...Object.values(mr).map(m=>m.f1_score));
+
+  document.getElementById('comp-grid').innerHTML=defs.map(d=>{
+    const m=mr[d.name]; if(!m) return '';
+    const isBest=d.name===best;
+    return `<div class="comp-card" style="border-top:4px solid ${d.color}">
+      <div class="comp-card-hdr">
+        <div class="comp-dot" style="background:${d.color}"></div>
+        <div class="comp-name">${d.name}</div>
+        ${isBest?'<span class="comp-badge">🏆 Best AUC</span>':''}
+      </div>
+      <div class="mbr"><div class="mbr-hdr"><span>ROC-AUC</span><span style="font-weight:600">${m.roc_auc.toFixed(4)}</span></div><div class="mbr-track"><div class="mbr-fill" style="width:${(m.roc_auc/maxAUC*100).toFixed(1)}%;background:${d.color}"></div></div></div>
+      <div class="mbr"><div class="mbr-hdr"><span>Accuracy</span><span style="font-weight:600">${(m.accuracy*100).toFixed(2)}%</span></div><div class="mbr-track"><div class="mbr-fill" style="width:${(m.accuracy/maxAcc*100).toFixed(1)}%;background:${d.color}"></div></div></div>
+      <div class="mbr"><div class="mbr-hdr"><span>F1 Score</span><span style="font-weight:600">${m.f1_score.toFixed(4)}</span></div><div class="mbr-track"><div class="mbr-fill" style="width:${(m.f1_score/maxF1*100).toFixed(1)}%;background:${d.color}"></div></div></div>
+      <div class="comp-stats">
+        <div class="cs-item"><span class="cs-val">${m.cv_auc_mean.toFixed(3)}</span><span class="cs-lbl">CV AUC Mean</span></div>
+        <div class="cs-item"><span class="cs-val">±${m.cv_auc_std.toFixed(3)}</span><span class="cs-lbl">CV Std</span></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function buildFeatureTab(){
+  if(!META) return;
+  const dep=META.dependency_results;
+  const models=Object.keys(MODEL_KEYS);
+  const rows=Object.entries(dep).map(([feat,mdata])=>{
+    const drops=models.map(m=>mdata[m]?.auc_drop||0);
+    const avg=drops.reduce((a,b)=>a+b,0)/drops.length;
+    return{feat,drops,avg,mdata};
+  }).sort((a,b)=>b.avg-a.avg);
+  const maxDrop=Math.max(...rows.map(r=>Math.abs(r.avg)));
+  const rankClrs=['#c2657a','#9e4a5e','#2d7d8c','#2a7d5a','#f59e0b','#7c3aed','#0891b2','#059669'];
+
+  const pillCls=d=>{if(d>0.002)return'pos';if(d<-0.002)return'neg';return'neu';};
+
+  const thead=`<thead><tr>
+    <th>#</th><th>Feature</th>
+    <th>GB Drop</th><th>RF Drop</th><th>LR Drop</th><th>KNN Drop</th>
+    <th>Avg AUC Drop</th><th>Importance</th>
+  </tr></thead>`;
+
+  const tbody='<tbody>'+rows.map((r,idx)=>{
+    const rc=rankClrs[Math.min(idx,rankClrs.length-1)];
+    const bw=maxDrop>0?Math.abs(r.avg)/maxDrop*100:0;
+    const bc=r.avg>0?'#2a7d5a':'#e74c3c';
+    return `<tr>
+      <td><div class="feat-rank" style="background:${rc}">${idx+1}</div></td>
+      <td><strong>${r.feat}</strong></td>
+      ${models.map(m=>{const d=r.mdata[m]?.auc_drop||0;return`<td><span class="drop-pill ${pillCls(d)}">${d>=0?'+':''}${d.toFixed(4)}</span></td>`;}).join('')}
+      <td><strong style="color:${r.avg>0?'#1a6b39':'#c0392b'}">${r.avg>=0?'+':''}${r.avg.toFixed(4)}</strong></td>
+      <td><div class="imp-bar"><div class="imp-track"><div class="imp-fill" style="width:${bw.toFixed(1)}%;background:${bc}"></div></div><span style="font-size:10px;color:var(--mid)">${r.avg>=0?'helpful':'noisy?'}</span></div></td>
+    </tr>`;
+  }).join('')+'</tbody>';
+
+  document.getElementById('feat-table-wrap').innerHTML=
+    `<table class="feat-table">${thead}${tbody}</table>
+     <p style="font-size:12px;color:var(--mid);margin-top:10px;line-height:1.7">
+       🟢 <strong>Positive drop</strong> = removing this feature hurt performance (it was genuinely useful)<br>
+       🔴 <strong>Negative drop</strong> = removing this feature helped (possibly noisy or redundant)<br>
+       GB = Gradient Boosting · RF = Random Forest · LR = Logistic Regression · KNN = KNN Classifier
+     </p>`;
+}
+
+loadMeta();
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+# Virtual Environment — NEVER push
+venv/
+env/
+bin/
+include/
+lib/
+lib64/
+pyvenv.cfg
+.env
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+
+# Mac system files
+.DS_Store
+.AppleDouble
+
+# VS Code
+.vscode/

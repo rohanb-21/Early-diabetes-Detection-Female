@@ -1,0 +1,431 @@
+{
+  "feature_cols": [
+    "Pregnancies",
+    "Glucose",
+    "BloodPressure",
+    "SkinThickness",
+    "Insulin",
+    "BMI",
+    "DiabetesPedigreeFunction",
+    "Age",
+    "Glucose_BMI",
+    "Age_Pregnancies",
+    "Insulin_Glucose",
+    "BMI_Age",
+    "Glucose_category"
+  ],
+  "zero_cols": [
+    "Glucose",
+    "BloodPressure",
+    "SkinThickness",
+    "Insulin",
+    "BMI"
+  ],
+  "best_model": "Gradient Boosting",
+  "model_results": {
+    "Gradient Boosting": {
+      "accuracy": 0.7597,
+      "roc_auc": 0.8296,
+      "f1_score": 0.6476,
+      "cv_auc_mean": 0.8093,
+      "cv_auc_std": 0.0225
+    },
+    "Random Forest": {
+      "accuracy": 0.7273,
+      "roc_auc": 0.8239,
+      "f1_score": 0.6441,
+      "cv_auc_mean": 0.8369,
+      "cv_auc_std": 0.0232
+    },
+    "Logistic Regression": {
+      "accuracy": 0.7403,
+      "roc_auc": 0.8202,
+      "f1_score": 0.661,
+      "cv_auc_mean": 0.8447,
+      "cv_auc_std": 0.0145
+    },
+    "KNN Classifier": {
+      "accuracy": 0.7468,
+      "roc_auc": 0.7914,
+      "f1_score": 0.6061,
+      "cv_auc_mean": 0.8145,
+      "cv_auc_std": 0.0424
+    }
+  },
+  "dependency_results": {
+    "Pregnancies": {
+      "Gradient Boosting": {
+        "accuracy": 0.7792,
+        "roc_auc": 0.8254,
+        "acc_drop": -0.0195,
+        "auc_drop": 0.0042
+      },
+      "Random Forest": {
+        "accuracy": 0.7403,
+        "roc_auc": 0.8202,
+        "acc_drop": -0.013,
+        "auc_drop": 0.0037
+      },
+      "Logistic Regression": {
+        "accuracy": 0.7208,
+        "roc_auc": 0.8056,
+        "acc_drop": 0.0195,
+        "auc_drop": 0.0146
+      },
+      "KNN Classifier": {
+        "accuracy": 0.7662,
+        "roc_auc": 0.8006,
+        "acc_drop": -0.0194,
+        "auc_drop": -0.0092
+      }
+    },
+    "Glucose": {
+      "Gradient Boosting": {
+        "accuracy": 0.7792,
+        "roc_auc": 0.8237,
+        "acc_drop": -0.0195,
+        "auc_drop": 0.0059
+      },
+      "Random Forest": {
+        "accuracy": 0.7208,
+        "roc_auc": 0.8137,
+        "acc_drop": 0.0065,
+        "auc_drop": 0.0102
+      },
+      "Logistic Regression": {
+        "accuracy": 0.7468,
+        "roc_auc": 0.8211,
+        "acc_drop": -0.0065,
+        "auc_drop": -0.0009
+      },
+      "KNN Classifier": {
+        "accuracy": 0.7208,
+        "roc_auc": 0.7843,
+        "acc_drop": 0.026,
+        "auc_drop": 0.0071
+      }
+    },
+    "BloodPressure": {
+      "Gradient Boosting": {
+        "accuracy": 0.7727,
+        "roc_auc": 0.8369,
+        "acc_drop": -0.013,
+        "auc_drop": -0.0073
+      },
+      "Random Forest": {
+        "accuracy": 0.7078,
+        "roc_auc": 0.8187,
+        "acc_drop": 0.0195,
+        "auc_drop": 0.0052
+      },
+      "Logistic Regression": {
+        "accuracy": 0.7403,
+        "roc_auc": 0.8185,
+        "acc_drop": 0.0,
+        "auc_drop": 0.0017
+      },
+      "KNN Classifier": {
+        "accuracy": 0.7403,
+        "roc_auc": 0.7994,
+        "acc_drop": 0.0065,
+        "auc_drop": -0.008
+      }
+    },
+    "SkinThickness": {
+      "Gradient Boosting": {
+        "accuracy": 0.7727,
+        "roc_auc": 0.8296,
+        "acc_drop": -0.013,
+        "auc_drop": -0.0
+      },
+      "Random Forest": {
+        "accuracy": 0.7078,
+        "roc_auc": 0.8202,
+        "acc_drop": 0.0195,
+        "auc_drop": 0.0037
+      },
+      "Logistic Regression": {
+        "accuracy": 0.7403,
+        "roc_auc": 0.8196,
+        "acc_drop": 0.0,
+        "auc_drop": 0.0006
+      },
+      "KNN Classifier": {
+        "accuracy": 0.7468,
+        "roc_auc": 0.7913,
+        "acc_drop": 0.0,
+        "auc_drop": 0.0001
+      }
+    },
+    "Insulin": {
+      "Gradient Boosting": {
+        "accuracy": 0.7403,
+        "roc_auc": 0.8207,
+        "acc_drop": 0.0194,
+        "auc_drop": 0.0089
+      },
+      "Random Forest": {
+        "accuracy": 0.7338,
+        "roc_auc": 0.8239,
+        "acc_drop": -0.0065,
+        "auc_drop": 0.0
+      },
+      "Logistic Regression": {
+        "accuracy": 0.7338,
+        "roc_auc": 0.8194,
+        "acc_drop": 0.0065,
+        "auc_drop": 0.0008
+      },
+      "KNN Classifier": {
+        "accuracy": 0.7597,
+        "roc_auc": 0.7996,
+        "acc_drop": -0.0129,
+        "auc_drop": -0.0082
+      }
+    },
+    "BMI": {
+      "Gradient Boosting": {
+        "accuracy": 0.7727,
+        "roc_auc": 0.8333,
+        "acc_drop": -0.013,
+        "auc_drop": -0.0037
+      },
+      "Random Forest": {
+        "accuracy": 0.7143,
+        "roc_auc": 0.8165,
+        "acc_drop": 0.013,
+        "auc_drop": 0.0074
+      },
+      "Logistic Regression": {
+        "accuracy": 0.7468,
+        "roc_auc": 0.8206,
+        "acc_drop": -0.0065,
+        "auc_drop": -0.0004
+      },
+      "KNN Classifier": {
+        "accuracy": 0.7403,
+        "roc_auc": 0.7822,
+        "acc_drop": 0.0065,
+        "auc_drop": 0.0092
+      }
+    },
+    "DiabetesPedigreeFunction": {
+      "Gradient Boosting": {
+        "accuracy": 0.7532,
+        "roc_auc": 0.8128,
+        "acc_drop": 0.0065,
+        "auc_drop": 0.0168
+      },
+      "Random Forest": {
+        "accuracy": 0.7403,
+        "roc_auc": 0.8163,
+        "acc_drop": -0.013,
+        "auc_drop": 0.0076
+      },
+      "Logistic Regression": {
+        "accuracy": 0.7143,
+        "roc_auc": 0.8122,
+        "acc_drop": 0.026,
+        "auc_drop": 0.008
+      },
+      "KNN Classifier": {
+        "accuracy": 0.7143,
+        "roc_auc": 0.7777,
+        "acc_drop": 0.0325,
+        "auc_drop": 0.0137
+      }
+    },
+    "Age": {
+      "Gradient Boosting": {
+        "accuracy": 0.7662,
+        "roc_auc": 0.8246,
+        "acc_drop": -0.0065,
+        "auc_drop": 0.005
+      },
+      "Random Forest": {
+        "accuracy": 0.7078,
+        "roc_auc": 0.8122,
+        "acc_drop": 0.0195,
+        "auc_drop": 0.0117
+      },
+      "Logistic Regression": {
+        "accuracy": 0.7403,
+        "roc_auc": 0.8198,
+        "acc_drop": 0.0,
+        "auc_drop": 0.0004
+      },
+      "KNN Classifier": {
+        "accuracy": 0.7727,
+        "roc_auc": 0.7981,
+        "acc_drop": -0.0259,
+        "auc_drop": -0.0067
+      }
+    },
+    "Glucose_BMI": {
+      "Gradient Boosting": {
+        "accuracy": 0.7662,
+        "roc_auc": 0.8211,
+        "acc_drop": -0.0065,
+        "auc_drop": 0.0085
+      },
+      "Random Forest": {
+        "accuracy": 0.7662,
+        "roc_auc": 0.8257,
+        "acc_drop": -0.0389,
+        "auc_drop": -0.0018
+      },
+      "Logistic Regression": {
+        "accuracy": 0.7338,
+        "roc_auc": 0.8183,
+        "acc_drop": 0.0065,
+        "auc_drop": 0.0019
+      },
+      "KNN Classifier": {
+        "accuracy": 0.7403,
+        "roc_auc": 0.7748,
+        "acc_drop": 0.0065,
+        "auc_drop": 0.0166
+      }
+    },
+    "Age_Pregnancies": {
+      "Gradient Boosting": {
+        "accuracy": 0.7403,
+        "roc_auc": 0.8213,
+        "acc_drop": 0.0194,
+        "auc_drop": 0.0083
+      },
+      "Random Forest": {
+        "accuracy": 0.7403,
+        "roc_auc": 0.8194,
+        "acc_drop": -0.013,
+        "auc_drop": 0.0045
+      },
+      "Logistic Regression": {
+        "accuracy": 0.7143,
+        "roc_auc": 0.8141,
+        "acc_drop": 0.026,
+        "auc_drop": 0.0061
+      },
+      "KNN Classifier": {
+        "accuracy": 0.7532,
+        "roc_auc": 0.8047,
+        "acc_drop": -0.0064,
+        "auc_drop": -0.0133
+      }
+    },
+    "Insulin_Glucose": {
+      "Gradient Boosting": {
+        "accuracy": 0.7597,
+        "roc_auc": 0.8265,
+        "acc_drop": -0.0,
+        "auc_drop": 0.0031
+      },
+      "Random Forest": {
+        "accuracy": 0.7468,
+        "roc_auc": 0.8194,
+        "acc_drop": -0.0195,
+        "auc_drop": 0.0045
+      },
+      "Logistic Regression": {
+        "accuracy": 0.7403,
+        "roc_auc": 0.8183,
+        "acc_drop": 0.0,
+        "auc_drop": 0.0019
+      },
+      "KNN Classifier": {
+        "accuracy": 0.7468,
+        "roc_auc": 0.8048,
+        "acc_drop": 0.0,
+        "auc_drop": -0.0134
+      }
+    },
+    "BMI_Age": {
+      "Gradient Boosting": {
+        "accuracy": 0.7532,
+        "roc_auc": 0.8246,
+        "acc_drop": 0.0065,
+        "auc_drop": 0.005
+      },
+      "Random Forest": {
+        "accuracy": 0.7208,
+        "roc_auc": 0.8213,
+        "acc_drop": 0.0065,
+        "auc_drop": 0.0026
+      },
+      "Logistic Regression": {
+        "accuracy": 0.7403,
+        "roc_auc": 0.818,
+        "acc_drop": 0.0,
+        "auc_drop": 0.0022
+      },
+      "KNN Classifier": {
+        "accuracy": 0.7403,
+        "roc_auc": 0.7907,
+        "acc_drop": 0.0065,
+        "auc_drop": 0.0007
+      }
+    },
+    "Glucose_category": {
+      "Gradient Boosting": {
+        "accuracy": 0.7597,
+        "roc_auc": 0.8296,
+        "acc_drop": -0.0,
+        "auc_drop": -0.0
+      },
+      "Random Forest": {
+        "accuracy": 0.7273,
+        "roc_auc": 0.8196,
+        "acc_drop": 0.0,
+        "auc_drop": 0.0043
+      },
+      "Logistic Regression": {
+        "accuracy": 0.7403,
+        "roc_auc": 0.8198,
+        "acc_drop": 0.0,
+        "auc_drop": 0.0004
+      },
+      "KNN Classifier": {
+        "accuracy": 0.7338,
+        "roc_auc": 0.7931,
+        "acc_drop": 0.013,
+        "auc_drop": -0.0017
+      }
+    }
+  },
+  "feature_importances": {
+    "Gradient Boosting": {
+      "Pregnancies": 0.0223,
+      "Glucose": 0.1228,
+      "BloodPressure": 0.0293,
+      "SkinThickness": 0.0373,
+      "Insulin": 0.0752,
+      "BMI": 0.0641,
+      "DiabetesPedigreeFunction": 0.0967,
+      "Age": 0.0553,
+      "Glucose_BMI": 0.2735,
+      "Age_Pregnancies": 0.0532,
+      "Insulin_Glucose": 0.0583,
+      "BMI_Age": 0.109,
+      "Glucose_category": 0.0031
+    },
+    "Random Forest": {
+      "Pregnancies": 0.0191,
+      "Glucose": 0.1466,
+      "BloodPressure": 0.0249,
+      "SkinThickness": 0.0493,
+      "Insulin": 0.12,
+      "BMI": 0.0603,
+      "DiabetesPedigreeFunction": 0.0538,
+      "Age": 0.0624,
+      "Glucose_BMI": 0.2201,
+      "Age_Pregnancies": 0.0361,
+      "Insulin_Glucose": 0.0354,
+      "BMI_Age": 0.1014,
+      "Glucose_category": 0.0706
+    }
+  },
+  "train_samples": 614,
+  "test_samples": 154,
+  "dataset_source": "Pima Indians Diabetes Database \u2014 UCI / Kaggle",
+  "knn_note": "KNN is used TWICE: as KNNImputer (data cleaning) and as KNeighborsClassifier (prediction model)"
+}
